@@ -1,9 +1,10 @@
 ---
-title: "Introduction"
+title: "Using unpacked.cern.ch"
 teaching: 10
 exercises: 0
 questions:
-- "Which options are available to run CMSSW in a container?"
+- "What is unpacked.cern.ch?"
+- "How can I use unpacked.cern.ch?"
 objectives:
 - "First learning objective. (FIXME)"
 keypoints:

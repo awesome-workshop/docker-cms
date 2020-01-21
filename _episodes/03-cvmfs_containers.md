@@ -1,9 +1,10 @@
 ---
-title: "Introduction"
+title: "Light-weight CMSSW containers"
 teaching: 10
 exercises: 0
 questions:
-- "Which options are available to run CMSSW in a container?"
+- "How can I get a more light-weight CMSSW container?"
+- "What are the caveats of using a light-weight CMSSW container?"
 objectives:
 - "First learning objective. (FIXME)"
 keypoints:

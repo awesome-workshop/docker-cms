@@ -1,9 +1,9 @@
 ---
-title: "Introduction"
+title: "Using full CMSSW containers"
 teaching: 10
 exercises: 0
 questions:
-- "Which options are available to run CMSSW in a container?"
+- "How can I obtain a standalone CMSSW container?"
 objectives:
 - "First learning objective. (FIXME)"
 keypoints:
