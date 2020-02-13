@@ -56,3 +56,6 @@
 [intro-docker-lesson]: https://awesome-workshop.github.io/intro-to-docker/
 [docker-cmsopendata]: https://hub.docker.com/u/cmsopendata
 [cms-opendata]: http://opendata.cern.ch/search?experiment=CMS
+[gitlab-cms-lesson]: https://awesome-workshop.github.io/gitlab-cms/
+[gitlab-cms-lesson-running]: https://awesome-workshop.github.io/gitlab-cms/04-running/index.html
+[cms-cvmfs-csi]: https://gitlab.cern.ch/clange/cms-cvmfs-csi/
