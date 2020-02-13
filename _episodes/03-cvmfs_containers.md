@@ -54,11 +54,11 @@ build_docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY
     # Need to start the automounter for CVMFS:
-    - docker run -d --name cvmfs --pid=host --user 0 --privileged --restart always -v /cvmfsmounts:/cvmfsmounts:rshared gitlab-registry.cern.ch/vcs/cvmfs-automounter:master
+    - docker run -d --name cvmfs --pid=host --user 0 --privileged --restart always -v /shared-mounts:/cvmfsmounts:rshared gitlab-registry.cern.ch/vcs/cvmfs-automounter:master
   script:
     # ls /cvmfs/cms.cern.ch/ won't work, but from the container it will
     # If you want to automount CVMFS on a new docker container add the volume config /cvmfsmounts/cvmfs:/cvmfs:rslave
-    - docker run -v /cvmfsmounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --name ${CI_PROJECT_NAME} ${FROM} /bin/bash ./.gitlab/build.sh
+    - docker run -v /shared-mounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --name ${CI_PROJECT_NAME} ${FROM} /bin/bash ./.gitlab/build.sh
     - SHA256=$(docker commit ${CI_PROJECT_NAME})
     - docker tag ${SHA256} ${TO}
     - docker push ${TO}
