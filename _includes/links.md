@@ -54,3 +54,5 @@
 [cms-containers]: [https://gitlab.cern.ch/cms-cloud/cmssw-docker]
 [singularity-docs]: https://sylabs.io/docs/
 [intro-docker-lesson]: https://awesome-workshop.github.io/intro-to-docker/
+[docker-cmsopendata]: https://hub.docker.com/u/cmsopendata
+[cms-opendata]: http://opendata.cern.ch/search?experiment=CMS
