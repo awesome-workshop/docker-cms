@@ -47,4 +47,10 @@
 [training]: https://carpentries.github.io/instructor-training/
 [workshop-repo]: {{ site.workshop_repo }}
 [yaml]: http://yaml.org/
-[docker]: https://docs.docker.com/install/
+[docker-install]: https://docs.docker.com/install/
+[unpacked-sync]: https://gitlab.cern.ch/unpacked/sync
+[cms-singularity]: http://cms-sw.github.io/singularity.html
+[batchdocs-containers]: https://batchdocs.web.cern.ch/containers/index.html
+[cms-containers]: [https://gitlab.cern.ch/cms-cloud/cmssw-docker]
+[singularity-docs]: https://sylabs.io/docs/
+[intro-docker-lesson]: https://awesome-workshop.github.io/intro-to-docker/
