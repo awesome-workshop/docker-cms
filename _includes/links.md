@@ -59,3 +59,6 @@
 [gitlab-cms-lesson]: https://awesome-workshop.github.io/gitlab-cms/
 [gitlab-cms-lesson-running]: https://awesome-workshop.github.io/gitlab-cms/04-running/index.html
 [cms-cvmfs-csi]: https://gitlab.cern.ch/clange/cms-cvmfs-csi/
+[cvmfs-download]: https://cernvm.cern.ch/portal/filesystem/downloads
+[cvmfs-docker-docs]: https://cvmfs.readthedocs.io/en/stable/cpt-configure.html#docker-containers
+[cvmfs-quickstart]: https://cernvm.cern.ch/portal/filesystem/quickstart
