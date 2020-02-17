@@ -1,7 +1,7 @@
 ---
 title: "Using Singularity"
 teaching: 10
-exercises: 0
+exercises: 5
 questions:
 - "How can I use CMSSW inside a container on LXPLUS?"
 objectives:
@@ -22,6 +22,8 @@ The only requirement is that Docker is installed.
 You will also have noticed that in several cases *privileged* containers
 are needed. These are not available to you on LXPLUS (nor is the `docker`
 command). On LXPLUS, the tool to run containers is Singularity.
+**The following commands will therefore all be run on LXPLUS**
+(`lxplus7.cern.ch` or later specifically).
 
 ## CMS documentation on Singularity
 
@@ -90,6 +92,9 @@ lot of garbage output and the `singularity shell` command will still
 fail. The reason for this is a
 [bug in Singularity](https://github.com/sylabs/singularity/issues/4943).
 
+One particular difference to note w.r.t. to Docker is that the image
+name needs to be prepended by `docker://` to tell Singularity that this
+is a Docker image.
 As you can see from the output, Singularity first downloads the layers
 from the registry, and is then unpacking the layers into a format that
 can be read by Singularity. This is somewhat a technical detail, but

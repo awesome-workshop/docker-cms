@@ -49,6 +49,7 @@
 [yaml]: http://yaml.org/
 [docker-install]: https://docs.docker.com/install/
 [unpacked-sync]: https://gitlab.cern.ch/unpacked/sync
+[unpacked-sync-recipe]: https://gitlab.cern.ch/unpacked/sync/blob/master/recipe.yaml
 [cms-singularity]: http://cms-sw.github.io/singularity.html
 [batchdocs-containers]: https://batchdocs.web.cern.ch/containers/index.html
 [cms-containers]: [https://gitlab.cern.ch/clange/cmssw-docker]
