@@ -63,9 +63,10 @@ The first option needed CVMFS to be installed on your computer. Using the
 `cvmfs-automounter` is effectively mimicking what is done on GitLab. First, a
 container, the `cvmfs-automounter`, is started that mounts CVMFS, and then
 this container provides the CVMFS mount to other containers. If you are
-running Linux, the following command should work. On a Mac, however, this will not work:
+running Linux, the following command should work. **On a Mac, however, this will not work** (at least at the moment):
 
 ~~~
+sudo mkdir /shared-mounts
 docker run -d --name cvmfs --pid=host --user 0 --privileged --restart always -v /shared-mounts:/cvmfsmounts:rshared gitlab-registry.cern.ch/vcs/cvmfs-automounter:master
 ~~~
 {: .language-bash}
@@ -74,14 +75,18 @@ This container is running as a daemon (`-d`), but you can still see it via
 `docker ps` and also kill it using `docker kill cvmfs`.
 
 ~~~
-docker run -v /shared-mounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --name ${CI_PROJECT_NAME} ${FROM} /bin/bash ./.gitlab/build.sh
+docker run -v /shared-mounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --name ${CI_PROJECT_NAME} ${FROM} /bin/bash
 ~~~
 {: .language-bash}
 
 ## Mounting CVMFS from the analysis container
 
+This is what I personally would recommend at the moment. It seems to
+work on both Mac and most Linux systems. The caveat is that the container
+runs with elevated privileges, but if you trust me, you can use it.
+
 ~~~
-docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it gitlab-registry.cern.ch/clange/cc7-cmssw-cvmfs:latest bash
+docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest bash
 ~~~
 {: .language-bash}
 
@@ -101,9 +106,30 @@ sudo setenforce 0
 
 This can be changed permanently by editing `/etc/selinux/config`, setting `SELINUX` to `permissive` or `disabled`. Mind, however, that there are certain security issues with disabling SElinux security policies as well as running privileged containers.
 
-- Using the cvmfs-automounter
-- Special permissions (privileged)
-- Running the build script in Docker with mounted CVMFS (point out both local CVMFS mount and automounter options)
+> ## Exercise: give it a shot
+> Try if you can run the following command from your cloned repository base
+> directory:
+~~~
+docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest bash .gitlab/build.sh
+~~~
+
+This should set up CMSSW, compile your code, and then exit the container
+again. You can of course also do this manually, i.e. start bash in the
+container and execute the `build.sh` afterwards so that you stay inside
+the container.
+
+{: .language-bash}
+>
+{: .exercise}
+
+> ## The downside to starting CVMFS in the container
+>
+> The CVMFS daemon is started when the container is started for the first
+> time. It is not started again when you e.g. lose your network connection
+> or simply connect back to the
+>
+{: .callout}
+
 
 {% include links.md %}
 
