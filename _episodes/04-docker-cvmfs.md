@@ -126,10 +126,18 @@ the container.
 >
 > The CVMFS daemon is started when the container is started for the first
 > time. It is not started again when you e.g. lose your network connection
-> or simply connect back to the
+> or simply connect back to the container at a later stage. At that point,
+> you won't have CVMFS access anymore.
 >
 {: .callout}
 
+> ## Developing CMS code on your laptop
+>
+> By using containers, you can effectively develop any all HEP-related code
+> (and beyond) on your local development machine, and it doesn't need to know
+> anything about CVMFS or CMSSW in the first place.
+>
+{: .testimonial}
 
 {% include links.md %}
 
