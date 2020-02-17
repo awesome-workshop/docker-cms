@@ -10,8 +10,9 @@ objectives:
 - "Successfully mount CVMFS via a privileged container."
 keypoints:
 - "You can install CVMFS on your local computer."
-- "The `cvmfs-automounter` allows you to provide CVMFS to other containers."
+- "The `cvmfs-automounter` allows you to provide CVMFS to other containers on Linux."
 - "Privileged containers can be dangerous."
+- "You can mount CVMFS from within a container on container startup."
 ---
 
 In order to use CVMFS via Docker, a couple of extra steps need to be taken.
