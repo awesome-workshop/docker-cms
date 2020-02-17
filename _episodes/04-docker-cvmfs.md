@@ -106,21 +106,20 @@ sudo setenforce 0
 
 This can be changed permanently by editing `/etc/selinux/config`, setting `SELINUX` to `permissive` or `disabled`. Mind, however, that there are certain security issues with disabling SElinux security policies as well as running privileged containers.
 
-> ## Exercise: give it a shot
+> ## Exercise: Give it a try!
 > Try if you can run the following command from your cloned repository base
 > directory:
-~~~
-docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest bash .gitlab/build.sh
-~~~
-
-This should set up CMSSW, compile your code, and then exit the container
-again. You can of course also do this manually, i.e. start bash in the
-container and execute the `build.sh` afterwards so that you stay inside
-the container.
-
-{: .language-bash}
+> ~~~
+> docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) > -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest > bash .gitlab/build.sh
+> ~~~
+> {: .language-bash}
 >
-{: .exercise}
+> This should set up CMSSW, compile your code, and then exit the container
+> again. You can of course also do this manually, i.e. start bash in the
+> container and execute the `build.sh` afterwards so that you stay inside
+> the container.
+>
+{: .challenge}
 
 > ## The downside to starting CVMFS in the container
 >
