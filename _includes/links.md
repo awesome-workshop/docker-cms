@@ -52,7 +52,7 @@
 [unpacked-sync-recipe]: https://gitlab.cern.ch/unpacked/sync/blob/master/recipe.yaml
 [cms-singularity]: http://cms-sw.github.io/singularity.html
 [batchdocs-containers]: https://batchdocs.web.cern.ch/containers/index.html
-[cms-containers]: [https://gitlab.cern.ch/clange/cmssw-docker]
+[cms-containers]: https://gitlab.cern.ch/clange/cmssw-docker
 [singularity-docs]: https://sylabs.io/docs/
 [intro-docker-lesson]: https://awesome-workshop.github.io/intro-to-docker/
 [docker-cmsopendata]: https://hub.docker.com/u/cmsopendata
