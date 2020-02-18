@@ -9,7 +9,7 @@ objectives:
 - "Understand how the light-weight CMS containers can be used."
 keypoints:
 - "The light-weight CMS containers need to mount CVMFS."
-- "Mounting CVMFS is done differently depending on the execution platform and container run-time."
+- "They will only work with CVMFS available."
 ---
 In a similar way to [running CMSSW in GitLab][gitlab-cms-lesson], the
 images containing only the base operating system (e.g. Scientific Linux 5/6
@@ -63,7 +63,7 @@ build_docker:
     - docker tag ${SHA256} ${TO}
     - docker push ${TO}
   variables:
-    FROM: clelange/cc7-cms # Override the image specified in the Dockerfile
+    FROM: gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cms:latest
     TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
 ~~~
 {: .language-yaml}
@@ -98,7 +98,7 @@ In the `script` section the analysis container is then started, doing the follow
 - and executing the command `/bin/bash ./.gitlab/build.sh`.
 
 The name of the image that is started is set via the `${FROM}` variable,
-which is set to be `clelange/cc7-cms` here.
+which is set to be `gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cms:latest` here.
 
 After the command that has been run in the container exits, a new *commit*
 will have been added to the container. We can find out the hash of this
@@ -124,7 +124,7 @@ for an easy correpondence between container name and source code version. The la
 > ~~~
 > #!/bin/bash
 >
-> # exit when any command fails, but allow variables not set (no -u); verbose
+> # exit when any command fails; be verbose
 > set -ex
 >
 > # make cmsrel etc. work
@@ -143,7 +143,11 @@ for an easy correpondence between container name and source code version. The la
 >
 {: .solution}
 
-Since developing this using GitLab is tricky, the next episode will cover how you can develop this interactively on LXPLUS using Singularity or on your own computer running Docker.
+Since developing this using GitLab is tricky, the next episodes will cover
+how you can develop this interactively on LXPLUS using Singularity or on
+your own computer running Docker.
+The caveat of using these light-weight images is that they cannot be run
+autonomously, but always need to have CVMFS access to do anything useful.
 
 > ## Why the `.gitlab` directory?
 >
