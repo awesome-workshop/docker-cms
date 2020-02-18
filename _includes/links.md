@@ -64,3 +64,4 @@
 [cvmfs-download]: https://cernvm.cern.ch/portal/filesystem/downloads
 [cvmfs-docker-docs]: https://cvmfs.readthedocs.io/en/stable/cpt-configure.html#docker-containers
 [cvmfs-quickstart]: https://cernvm.cern.ch/portal/filesystem/quickstart
+[payload-docker-cms]: https://gitlab.cern.ch/awesome-workshop/payload-docker-cms/

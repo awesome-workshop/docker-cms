@@ -22,6 +22,9 @@ these images will be automatically synchronised from the image registry
 to the CVMFS area within a few minutes whenever
 you create a new version of the image.
 
+We will continue with the `ZPeakAnalysis` example, but for demonstration
+purposes we will use an [example payload][payload-docker-cms].
+
 ## Exploring the CVMFS `unpacked.cern.ch` area
 
 The *unpacked* area is a directory structure within CVMFS:
@@ -135,7 +138,9 @@ out to a different path.
 > ## Challenge: Patch `MyZPeak_cfg.py` to write out to your EOS home
 >
 > Or even better, use an environment variable to define this that if not set
-> defaults to `./`.
+> defaults to `./`. Mind that you cannot change files in the container,
+> so the way to go is change the python config in the repository and
+> have a new image built that can then be used.
 >
 {: .challenge}
 
