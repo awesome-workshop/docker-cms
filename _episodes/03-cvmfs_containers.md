@@ -17,6 +17,9 @@ or CentOS 7/8) plus additionally required system packages can be used to run
 CMSSW (and other related software). CMSSW needs to be mounted via CVMFS.
 **This is the recommended way!**
 
+For this lesson, we will continue with the repository we used for the
+[GitLab CI for CMS lesson][gitlab-cms-lesson] and just add to it.
+
 ## Adding analysis code to a light-weight container
 
 Instead of using these containers only for compiling and
