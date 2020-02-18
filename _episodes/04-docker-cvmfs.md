@@ -29,7 +29,8 @@ We will go through these options in the following.
 > Unfortunately, all the options below have some caveats, and they might not
 > even work on your computer. At the moment, no clear recommendations can be
 > given. Try for yourself which option works best for you. However, it is not
-> essential for this lessons that either of these options work.
+> essential for this lesson that any of these options work. We will learn
+> about other options that will work later.
 >
 {: .callout}
 
@@ -45,7 +46,7 @@ Please also have a look at the
 [CVMFS with Docker documentation][cvmfs-docker-docs]
 to avoid common pitfalls when running Linux on your computer and trying to
 bind mount CVMFS from the host. This is not necessary when running on a Mac.
-However, you need to go to *Docker Settings* -> *Resources* -> *File Sharing*
+However, on a Mac you need to go to *Docker Settings* -> *Resources* -> *File Sharing*
 and add `/cvmfs` to enable bind mounting.
 
 ![`/cvmfs` needs to be accessible to Docker for bind mounting](../fig/docker_file_sharing.png)
@@ -111,7 +112,7 @@ This can be changed permanently by editing `/etc/selinux/config`, setting `SELIN
 > Try if you can run the following command from your cloned repository base
 > directory:
 > ~~~
-> docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) > -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest > bash .gitlab/build.sh
+docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest > bash .gitlab/build.sh
 > ~~~
 > {: .language-bash}
 >
