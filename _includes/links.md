@@ -47,6 +47,7 @@
 [training]: https://carpentries.github.io/instructor-training/
 [workshop-repo]: {{ site.workshop_repo }}
 [yaml]: http://yaml.org/
+[bootcamp-coc]: https://indico.cern.ch/event/854880/page/18570-code-of-conduct
 [docker-install]: https://docs.docker.com/install/
 [unpacked-sync]: https://gitlab.cern.ch/unpacked/sync
 [unpacked-sync-recipe]: https://gitlab.cern.ch/unpacked/sync/blob/master/recipe.yaml
