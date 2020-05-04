@@ -115,7 +115,7 @@ This can be changed permanently by editing `/etc/selinux/config`, setting `SELIN
 > Try if you can run the following command from your cloned repository base
 > directory:
 > ~~~
-docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest > bash .gitlab/build.sh
+docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $(pwd) gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cmssw-cvmfs:latest bash
 > ~~~
 > {: .language-bash}
 >
