@@ -65,7 +65,10 @@ The first option needed CVMFS to be installed on your computer. Using the
 `cvmfs-automounter` is effectively mimicking what is done on GitLab. First, a
 container, the `cvmfs-automounter`, is started that mounts CVMFS, and then
 this container provides the CVMFS mount to other containers. If you are
-running Linux, the following command should work. **On a Mac, however, this will not work** (at least at the moment):
+running Linux, the following command should work.
+**On a Mac, however, this will not work** (at least at the moment). This could
+work if you are using [Windows Subsystem for Linux 2 (WSL2)][wsl2] in combination
+with [Docker for WSL2][wsl2-docker].
 
 ~~~
 sudo mkdir /shared-mounts
@@ -84,7 +87,7 @@ docker run -v /shared-mounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --na
 ## Mounting CVMFS from the analysis container
 
 This is what I personally would recommend at the moment. It seems to
-work on both Mac and most Linux systems. The caveat is that the container
+work on both Mac, Windows 10 Pro, and most Linux systems. The caveat is that the container
 runs with elevated privileges, but if you trust me, you can use it.
 
 ~~~
@@ -142,3 +145,5 @@ docker run --rm --cap-add SYS_ADMIN --device /dev/fuse -it -v $(pwd):$(pwd) -w $
 
 {% include links.md %}
 
+[wsl2]: https://docs.microsoft.com/en-us/windows/wsl/wsl2-install
+[wsl2-docker]: https://docs.docker.com/docker-for-windows/wsl-tech-preview/
