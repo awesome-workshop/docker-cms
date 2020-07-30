@@ -24,7 +24,7 @@ There are different approaches:
 
 We will go through these options in the following.
 
-> ## This is were things get ugly
+> ## This is where things get ugly
 >
 > Unfortunately, all the options below have some caveats, and they might not
 > even work on your computer. At the moment, no clear recommendations can be
