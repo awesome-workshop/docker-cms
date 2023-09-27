@@ -54,8 +54,8 @@
 [cms-singularity]: http://cms-sw.github.io/singularity.html
 [batchdocs-containers]: https://batchdocs.web.cern.ch/containers/index.html
 [cms-containers]: https://gitlab.cern.ch/clange/cmssw-docker
-[singularity-docs]: https://sylabs.io/docs/
-[intro-docker-lesson]: https://awesome-workshop.github.io/intro-to-docker/
+[apptainer-docs]: https://apptainer.org/docs/user/latest/
+[intro-docker-lesson]: https://hsf-training.github.io/hsf-training-docker/index.html
 [docker-cmsopendata]: https://hub.docker.com/u/cmsopendata
 [cms-opendata]: http://opendata.cern.ch/search?experiment=CMS
 [gitlab-cms-lesson]: https://awesome-workshop.github.io/gitlab-cms/
