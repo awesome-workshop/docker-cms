@@ -9,7 +9,7 @@ objectives:
 keypoints:
 - "Full CMSSW release containers are very big."
 - "It is more practical to use light-weight containers and obtain CMSSW via CVMFS."
-- "The centrally supported way to run CMSSW in a container is using Singularity."
+- "The centrally supported way to run CMSSW in a container is using Apptainer."
 ---
 CMS does not have a clear concept of separating analysis software from the rest
 of the experimental software stack such as event generation, data taking, and
