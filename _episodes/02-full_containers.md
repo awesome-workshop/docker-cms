@@ -16,7 +16,7 @@ the images that contain full CMSSW releases can be very big. CMS computing
 therefore does not routinely build these images. However, as part of the
 [CMS Open Data effort][cms-opendata], images are provided for some releases.
 You can find those on [Docker Hub][docker-cmsopendata]. In addition, a
-[build service][cms-containers] is currently under development.
+[build service][cms-containers] is available.
 
 If you would like to use these images, you can use them in the same way as
 the other CMS images with the only difference that the CMSSW software in the
@@ -27,13 +27,6 @@ using the version published on Docker Hub:
 
 ~~~
 docker run --rm -it cmsopendata/cmssw:10_6_8_patch1 /bin/zsh
-~~~
-{: .language-bash}
-
-The images are in several cases also mirrored on the CERN GitLab registry:
-
-~~~
-docker run --rm -it gitlab-registry.cern.ch/clange/cmssw-docker/cmssw_10_6_8_patch1 /bin/zsh
 ~~~
 {: .language-bash}
 
