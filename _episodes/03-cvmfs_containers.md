@@ -40,7 +40,7 @@ jobs quite easy to write.
 
 ### Creating a Dockerfile
 Before using those templates, however, we need to write a Dockerfile, containing the commands
-needed to build our code. Please refer to this [introduction][intro-docker-lesson] to learn about 
+to build our code. Please refer to this [introduction][intro-docker-lesson] to learn about 
 Docker and how to write a Dockerfile.
 
 The *Dockerfile* required looks as follows:
@@ -66,11 +66,11 @@ RUN shopt -s expand_aliases && \
 ~~~
 {: .language-plaintext}
 
-This is pretty complicated, so let's break this into smaller pieces.
+This is pretty complicated, so let's break it into smaller pieces.
 
 The `FROM` directive defines the image we build on top of.
 The `ENV` directives define environment variables that will be used during the build.
-The `COPY` directive copies copies the local directory `ZPeakAnalysis` into a specified
+The `COPY` directive copies the local directory `ZPeakAnalysis` into a specified
 location in the container. You have to remember that this Dockerfile will be used to 
 build a container image in the context of a GitLab CI job, so the `ZPeakAnalysis` 
 directory will be available, as the first thing the GitLab CI job does is clone the 
@@ -81,17 +81,17 @@ and compile with `scram`.
 
 > ## If you want to be able to build the container on your laptop you need CVMFS at build time
 > You can in principle build the container locally, but you need to mount CVMFS (which 
-> must be available on the host machine) at image build time.
+> must be available on the host machine) at build time.
 > Docker does not allow to mount volumes at build time, only at runtime, unless one 
 > uses [docker-compose](https://docs.docker.com/compose/).
 > A more straightforward way is to use [`podman`](https://podman.io/), instead of Docker, 
-> to build the image locally, since `podman` allows mounting volumes at buildtime.
+> to build the image locally, since `podman` allows mounting volumes at build time.
 > ~~~
 > cd [the directory where you cloned your repository]
 > podman build . -v /cvmfs:/cvmfs --format docker -t [somename]
 > ~~~
 > {: .language-bash}
-> The `build .` command tells `podman` to build the current directory, where it will look for a file called 
+> The `build .` command tells `podman` to build the current directory, where it will search for a file called 
 > `Dockerfile`. The `-v /cvmfs:/cvmfs` instructs `podman` to mount directory `/cvmfs` on the host to directory 
 > `/cvfms` on the container (the syntax is `-v [host path]:[dest path]`). Finally, the `--format docker` option
 > instructs `podman` to create a docker image, rather than [`oci`](https://opencontainers.org/).
@@ -104,7 +104,7 @@ Using `kaniko` circumvents the problem we were alluding to before, that CVMFS ne
 available at build time, which cannot be achieved with 'vanilla' docker commands.
 
 > Up until October 2023 one could build containers with CVMFS mounted at build time in the 
-> GitLab CI via the use of dedicated, so called *docker-provileged* GitLab runners.
+> GitLab CI via the use of dedicated, so called *docker-provileged*, GitLab runners.
 > These runners, however, have been decommissioned, see [here](https://cern.service-now.com/service-portal?id=outage&n=OTG0078219).
 > Since then, the recommended way to build docker images needing CVMFS at build time is via `kaniko`.
 {: .discussion}
@@ -113,7 +113,7 @@ CAT provides GitLab CI job templates for building images with `kaniko` and for t
 The templates are hosted in the [`cms-analysis/general/container-image-ci-templates`](https://gitlab.cern.ch/cms-analysis/general/container-image-ci-templates
 ) project.
 
-A `.gitlab-ci.yml` file using the templates for building the image is the following.
+You can find below a `.gitlab-ci.yml` file for building the image is the following using the CAT templates.
 
 ~~~
 include:
@@ -153,13 +153,13 @@ The `include` statement imports the templates.
 
 Those templates define jobs called `.build_kaniko` and `.tag_skopeo`, 
 which are then used to define the jobs that are actually run, i.e. 
-`build_image` and `tag_image` (those two jobs `extend`, i.e. include the 
+`build_image` and `tag_image` (those two jobs `extend`, i.e. include, the 
 ones defined in the templates).
 
 The `build_image` job defines the variable `DOCKER_FILE_NAME`, identifying the
-name of the Dockerfile, and `REGISTRY_IMAGE_PATH`, declaring the registry where
+path of the Dockerfile, and `REGISTRY_IMAGE_PATH`, declaring the registry where
 the image will be published. The `REGISTRY_IMAGE_PATH` variable itself points to a value 
-that is formed using other variable that GitLab pre-defines for every CI job,
+that is formed using other variable, that GitLab pre-defines for every CI job,
 (along with many others, see [here](https://docs.gitlab.com/ci/variables/predefined_variables/)).
 The `CI_REGISTRY_IMAGE` variable points to the container registry associated with the repository.
 In case of the CERN GitLab installation, this usually corresponds to 
@@ -170,7 +170,7 @@ only if the CI runs on the default branch (`master` or `main`, typically).
 The `tag_image` job will take the image with the name specified in `IMAGE_ORIGIN_TAG`
 and copy it to the name specified in `IMAGE_DESTINATION_TAG`.
 This job only runs on the default branch (this behavior is set directly in the `.tag_skopeo`
-job)
+job).
 
 Since developing this using GitLab is tricky, the next episodes will cover
 how you can develop this interactively on LXPLUS using Singularity or on
