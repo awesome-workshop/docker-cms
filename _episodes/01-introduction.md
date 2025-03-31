@@ -32,6 +32,10 @@ running (which could be your laptop, a GitLab runner, or a Kubernetes node).
 These images have a size of a few hundred Megabytes, but rely on a good
 network connection to access the CVMFS share.
 
+Analysis software based on LCG-provided software stacks, available at 
+`/cvmfs/sft.cern.ch/`, is a similar use case, in that it can be more practical
+to pick packages from the CVMFS share rather than rebuilding each of them.
+
 One thing that has not been covered in detail in the
 [introduction to Docker][intro-docker-lesson] is that containers do not
 necessarily have to be executed using Docker. There are several so-called

@@ -1,5 +1,5 @@
 ---
-title: "Light-weight CMSSW containers"
+title: "Containers based on CVMFS"
 teaching: 15
 exercises: 10
 questions:
@@ -29,122 +29,148 @@ will effectively be able to run your code in a version-controlled sandbox, in
 a similar way as grid jobs are submitted and run. Adding your code on top of
 the base image will only increase their size by a few Megabytes. CVMFS will
 be mounted in the build step and also whenever the container is executed.
-The important conceptual difference is that we do not use a *Dockerfile* to
-build the image since that would not have CVMFS available, but instead we use
-Docker *manually* as if it was installed on a local machine.
 
-The way this is done is by requesting a **docker-privileged** GitLab runner.
-With such a runner we can run Docker-in-Docker, which allows to manually
-attach CVMFS to a container and run commands such as compiling analysis code
-in this container. Compiling code will add an additional layer to the
-container, which consists only of the effect of the commands run. After
-exiting this container, we can tag this layer and push the container to the
-container registry.
+Docker containers can be built in GitLab CI jobs using the [kaniko](https://github.com/GoogleContainerTools/kaniko) tool.
+Additionally, [skopeo](https://github.com/containers/skopeo) cab be used to
+tag the container images.
 
-The *YAML* required looks as follows:
+Luckily, templates are provided in the Common Analysis Tools (CAT) managed GitLab area
+[cms-analysis](https://cms-analysis.docs.cern.ch/code/), which make creating the GitLab CI 
+jobs quite easy to write.
+
+### Creating a Dockerfile
+Before using those templates, however, we need to write a Dockerfile, containing the commands
+to build our code. Please refer to this [introduction][intro-docker-lesson] to learn about 
+Docker and how to write a Dockerfile.
+
+The *Dockerfile* required looks as follows:
 
 ~~~
-build_docker:
-  only:
-    - pushes
-    - merge_requests
-  tags:
-    - docker-privileged
-  image: docker:19.03.1
-  services:
-  # To obtain a Docker daemon, request a Docker-in-Docker service
-  - docker:19.03.1-dind
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY
-    # Need to start the automounter for CVMFS:
-    - docker run -d --name cvmfs --pid=host --user 0 --privileged --restart always -v /shared-mounts:/cvmfsmounts:rshared gitlab-registry.cern.ch/vcs/cvmfs-automounter:master
-  script:
-    # ls /cvmfs/cms.cern.ch/ won't work, but from the container it will
-    # If you want to automount CVMFS on a new docker container add the volume config /shared-mounts/cvmfs:/cvmfs:rslave
-    - docker run -v /shared-mounts/cvmfs:/cvmfs:rslave -v $(pwd):$(pwd) -w $(pwd) --name ${CI_PROJECT_NAME} ${FROM} /bin/bash ./.gitlab/build.sh
-    - SHA256=$(docker commit ${CI_PROJECT_NAME})
-    - docker tag ${SHA256} ${TO}
-    - docker push ${TO}
+FROM gitlab-registry.cern.ch/cms-cloud/cmssw-docker/cc7-cms:latest
+
+ENV CMS_PATH /cvmfs/cms.cern.ch
+ENV CMSSW_RELEASE CMSSW_10_6_8_patch1
+ENV SCRAM_ARCH slc7_amd64_gcc820
+
+COPY ZPeakAnalysis /ZPeakAnalysis
+
+RUN shopt -s expand_aliases && \
+    set +u && source ${CMS_PATH}/cmsset_default.sh && set -u  && \
+    export SCRAM_ARCH=${SCRAM_ARCH} && \
+    cmsrel ${CMSSW_RELEASE} && \
+    cd ${CMSSW_RELEASE}/src && \
+    cmsenv && \
+    mkdir -p AnalysisCode && \
+    cp -r /ZPeakAnalysis AnalysisCode && \
+    scram b
+~~~
+{: .language-plaintext}
+
+This is pretty complicated, so let's break it into smaller pieces.
+
+The `FROM` directive defines the image we build on top of.
+The `ENV` directives define environment variables that will be used during the build.
+The `COPY` directive copies the local directory `ZPeakAnalysis` into a specified
+location in the container. You have to remember that this Dockerfile will be used to 
+build a container image in the context of a GitLab CI job, so the `ZPeakAnalysis` 
+directory will be available, as the first thing the GitLab CI job does is clone the 
+repository.
+Finally, the `RUN` directive contains the commands that need to be run to setup the 
+CMSSW developer area, move the `ZPeakAnalysis` code in a `[subsystem]/[package]` structure,
+and compile with `scram`.
+
+> ## If you want to be able to build the container on your laptop you need CVMFS at build time
+> You can in principle build the container locally, but you need to mount CVMFS (which 
+> must be available on the host machine) at build time.
+> Docker does not allow to mount volumes at build time, only at runtime, unless one 
+> uses [docker-compose](https://docs.docker.com/compose/).
+> A more straightforward way is to use [`podman`](https://podman.io/), instead of Docker, 
+> to build the image locally, since `podman` allows mounting volumes at build time.
+> ~~~
+> cd [the directory where you cloned your repository]
+> podman build . -v /cvmfs:/cvmfs --format docker -t [somename]
+> ~~~
+> {: .language-bash}
+> The `build .` command tells `podman` to build the current directory, where it will search for a file called 
+> `Dockerfile`. The `-v /cvmfs:/cvmfs` instructs `podman` to mount directory `/cvmfs` on the host to directory 
+> `/cvfms` on the container (the syntax is `-v [host path]:[dest path]`). Finally, the `--format docker` option
+> instructs `podman` to create a docker image, rather than [`oci`](https://opencontainers.org/).
+{: .callout}
+
+### Building containers in the GitLab CI
+Docker images can be built in the CI using the `kaniko` image builder.
+This tool allows building images from a Docker file, while running inside a container.
+Using `kaniko` circumvents the problem we were alluding to before, that CVMFS needs to be 
+available at build time, which cannot be achieved with 'vanilla' docker commands.
+
+> Up until October 2023 one could build containers with CVMFS mounted at build time in the 
+> GitLab CI via the use of dedicated, so called *docker-provileged*, GitLab runners.
+> These runners, however, have been decommissioned, see [here](https://cern.service-now.com/service-portal?id=outage&n=OTG0078219).
+> Since then, the recommended way to build docker images needing CVMFS at build time is via `kaniko`.
+{: .discussion}
+
+CAT provides GitLab CI job templates for building images with `kaniko` and for tagging them (with `skopeo`).
+The templates are hosted in the [`cms-analysis/general/container-image-ci-templates`](https://gitlab.cern.ch/cms-analysis/general/container-image-ci-templates
+) project.
+
+You can find below a `.gitlab-ci.yml` file for building the image is the following using the CAT templates.
+
+~~~
+include:
+  - project: 'cms-analysis/general/container-image-ci-templates'
+    file:
+      - 'kaniko-image.gitlab-ci.yml'
+      - 'skopeo.gitlab-ci.yml'
+
+build_image:
+  stage: build
+  extends: .build_kaniko
   variables:
-    FROM: gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cms:latest
-    TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    DOCKER_FILE_NAME: "Dockerfile"
+    REGISTRY_IMAGE_PATH: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      variables:
+        PUSH_IMAGE: "true"
+    - when: always
+      variables:
+        PUSH_IMAGE: "false"     
+  tags:
+    - cvmfs
+
+tag_image:
+  stage: tag
+  extends: .tag_skopeo
+  variables:
+    IMAGE_ORIGIN_TAG: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    IMAGE_DESTINATION_TAG: "${CI_REGISTRY_IMAGE}:latest"
 ~~~
 {: .language-yaml}
 
-This is pretty complicated, so let's break this into smaller pieces.
+This is pretty complicated, so let us break it down to smaller pieces.
 
-The `only` section determines when the step is actually run. The default
-should probably be `pushes` only so that a new image is built whenever there
-are changes to a branch. If you would like to build a container already when
-a merge request is created so that you can test the code before merging, also
-add `merge_requests` as in the example provided here.
+The `include` statement imports the templates.
 
-The next couple of lines are related to the special Docker-in-Docker runner.
-For this to work, the runner needs to be **privileged**, which is achieved by
-adding `docker-privileged` to the `tags`. The image to run is then
-`docker:19.03.1`, and in addition a special `service` with the name
-`docker:19.03.1-dind` is required.
+Those templates define jobs called `.build_kaniko` and `.tag_skopeo`, 
+which are then used to define the jobs that are actually run, i.e. 
+`build_image` and `tag_image` (those two jobs `extend`, i.e. include, the 
+ones defined in the templates).
 
-Once the runner is up, the `before_script` section is used to prepare the
-setup for the following steps. First, the runner logs in to the GitLab image
-registry with an automatically provided token (this is a property of the job
-and does not need to be set by you manually). The second command starts a
-special container, which mounts CVMFS and makes it available to our analysis
-container.
+The `build_image` job defines the variable `DOCKER_FILE_NAME`, identifying the
+path of the Dockerfile, and `REGISTRY_IMAGE_PATH`, declaring the registry where
+the image will be published. The `REGISTRY_IMAGE_PATH` variable itself points to a value 
+that is formed using other variable, that GitLab pre-defines for every CI job,
+(along with many others, see [here](https://docs.gitlab.com/ci/variables/predefined_variables/)).
+The `CI_REGISTRY_IMAGE` variable points to the container registry associated with the repository.
+In case of the CERN GitLab installation, this usually corresponds to 
+`gitlab-registry.cern.ch/[namespace]/[project]`.
+Notice the rules for this job: the job will publish the image to the registry
+only if the CI runs on the default branch (`master` or `main`, typically).
 
-In the `script` section the analysis container is then started, doing the following:
-
-- mounting the volume (`-v /shared-mounts/cvmfs:/cvmfs:rslave`),
-- mounting the current working directory (`-v $(pwd):$(pwd)`),
-- setting the current working directory mounted as working directory inside the container (`-w $(pwd)`),
-- settings its name to the project name (`--name ${CI_PROJECT_NAME}`),
-- and executing the command `/bin/bash ./.gitlab/build.sh`.
-
-The name of the image that is started is set via the `${FROM}` variable,
-which is set to be `gitlab-registry.cern.ch/clange/cmssw-docker/cc7-cms:latest` here.
-
-After the command that has been run in the container exits, a new *commit*
-will have been added to the container. We can find out the hash of this
-commit by running `docker commit ${CI_PROJECT_NAME}` (this is why we set the
-container name to `${CI_PROJECT_NAME}`). With the following command, we then
-*tag* this commit with the repository's registry name and a unique hash that
-corresponds to the `git` commit at which we have built the image. This allows
-for an easy correpondence between container name and source code version. The last command simply pushed this image to the registry.
-
-> ## Exercise: Compile the `ZPeakAnalysis` inside the container
->
-> The one thing that has not yet been explained is what the `build.sh` script
-> does. This file needs to be part of the repository. Take the `ZPeakAnalysis`
-> directory from yesterday's lesson, add it to the repository, and compile
-> the code by adding the required commands to the `build.sh` script.
->
-{: .challenge}
-
-> ## Solution: Compile the `ZPeakAnalysis` inside the container
->
-> A possible solution could look like this:
->
-> ~~~
-> #!/bin/bash
->
-> # exit when any command fails; be verbose
-> set -ex
->
-> # make cmsrel etc. work
-> shopt -s expand_aliases
-> export MY_BUILD_DIR=${PWD}
-> source /cvmfs/cms.cern.ch/cmsset_default.sh
-> cd /home/cmsusr
-> cmsrel CMSSW_10_6_8_patch1
-> mkdir -p CMSSW_10_6_8_patch1/src/AnalysisCode
-> mv ${MY_BUILD_DIR}/ZPeakAnalysis CMSSW_10_6_8_patch1/src/AnalysisCode
-> cd CMSSW_10_6_8_patch1/src
-> cmsenv
-> scram b
-> ~~~
-> {: .language-bash}
->
-{: .solution}
+The `tag_image` job will take the image with the name specified in `IMAGE_ORIGIN_TAG`
+and copy it to the name specified in `IMAGE_DESTINATION_TAG`.
+This job only runs on the default branch (this behavior is set directly in the `.tag_skopeo`
+job).
 
 Since developing this using GitLab is tricky, the next episodes will cover
 how you can develop this interactively on LXPLUS using Singularity or on
@@ -152,16 +178,6 @@ your own computer running Docker.
 The caveat of using these light-weight images is that they cannot be run
 autonomously, but always need to have CVMFS access to do anything useful.
 
-> ## Why the `.gitlab` directory?
->
-> Putting the `build.sh` script into a directory called `.gitlab` is a
-> recommended convention. If you develop code locally (e.g. on LXPLUS), you
-> will have a different directory structure. Your analysis code, i.e.
-> `ZPeakAnalysis`, will reside within `CMSSW_10_6_8_patch1/src/AnalysisCode`, > and executing the script from within the `ZPeakAnalysis` does not make much
-> sense, because you will create a CMSSW workarea within an existing one.
-> Therefore, using a hidden directory with a name that makes it clear that
-> this is for running within GitLab, and is ignored otherwise, can be useful.
->
-{: .testimonial}
+
 
 {% include links.md %}

@@ -53,13 +53,13 @@
 [unpacked-sync-recipe]: https://gitlab.cern.ch/unpacked/sync/blob/master/recipe.yaml
 [cms-singularity]: http://cms-sw.github.io/singularity.html
 [batchdocs-containers]: https://batchdocs.web.cern.ch/containers/index.html
-[cms-containers]: https://gitlab.cern.ch/clange/cmssw-docker
+[cms-containers]: https://gitlab.cern.ch/cms-cloud/cmssw-docker
 [apptainer-docs]: https://apptainer.org/docs/user/latest/
 [intro-docker-lesson]: https://hsf-training.github.io/hsf-training-docker/index.html
 [docker-cmsopendata]: https://hub.docker.com/u/cmsopendata
 [cms-opendata]: http://opendata.cern.ch/search?experiment=CMS
 [gitlab-cms-lesson]: https://awesome-workshop.github.io/gitlab-cms/
-[gitlab-cms-lesson-running]: https://awesome-workshop.github.io/gitlab-cms/04-running/index.html
+[gitlab-cms-lesson-running]: https://awesome-workshop.github.io/gitlab-cms/05-running/index.html
 [cms-cvmfs-csi]: https://gitlab.cern.ch/clange/cms-cvmfs-csi/
 [cvmfs-download]: https://cernvm.cern.ch/portal/filesystem/downloads
 [cvmfs-docker-docs]: https://cvmfs.readthedocs.io/en/stable/cpt-configure.html#docker-containers
