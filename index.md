@@ -3,7 +3,8 @@ layout: lesson
 root: .  # Is the only page that doesn't follow the pattern /:path/index.html
 permalink: index.html  # Is the only page that doesn't follow the pattern /:path/index.html
 ---
-In this lesson you will learn how to obtain and use Docker containers, in which you can run CMSSW jobs.
+In this lesson you will learn how to obtain and use Docker containers,
+in which you can run CMSSW and general CMS analysis jobs.
 
 <!-- this is an html comment -->
 
