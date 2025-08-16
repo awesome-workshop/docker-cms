@@ -65,3 +65,8 @@
 [cvmfs-docker-docs]: https://cvmfs.readthedocs.io/en/stable/cpt-configure.html#docker-containers
 [cvmfs-quickstart]: https://cernvm.cern.ch/portal/filesystem/quickstart
 [payload-docker-cms]: https://gitlab.cern.ch/awesome-workshop/payload-docker-cms/
+[dockerhub-python]: https://hub.docker.com/_/python
+[cat-frameworks]: https://cms-analysis.docs.cern.ch/guidelines/frameworks/frameworks/
+[cms-oc-docker]: https://github.com/cms-sw/cms-docker/
+[cern-linux-images]: https://linux.web.cern.ch/dockerimages/
+[docker-hub]: https://hub.docker.com/
