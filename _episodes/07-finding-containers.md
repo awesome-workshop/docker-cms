@@ -119,18 +119,22 @@ have been built.
 >
 {: .callout}
 
-Note also that Docker Hub has pull limits, and may happen that the pull fails with
+Note also that Docker Hub has pull limits, and it may happen that the pull fails with
+
 
 ~~~
 Too Many Requests - Server message: toomanyrequests: You have reached your unauthenticated pull rate limit.
 ~~~
 {: .language-plaintext}
 
+
 To avoid this, you can pull images from Docker Hub through
 the [pull through cache](https://kubernetes.docs.cern.ch/docs/registry/quickstart/#dockerhub) at CERN.
-You can do that by appending `registry.cern.ch/docker.io/` to the image name so that, for example
-`rootproject/root` becomes `registry.cern.ch/docker.io/rootproject/root`. Image names with
-only one part, such as `alpine` become `registry.cern.ch/docker.io/library/alpine`.
+You can do that by appending `registry.cern.ch/docker.io/` to the image name so that:
+
+- `rootproject/root` becomes `registry.cern.ch/docker.io/rootproject/root` for images with a project name
+- `alpine` becomes `registry.cern.ch/docker.io/library/alpine` for images with only one part in the name.
+  
 Outside the CERN network, you need to [login to the CERN registry](https://kubernetes.docs.cern.ch/docs/registry/quickstart/#logging-in).
 
 ## Other registries
